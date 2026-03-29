@@ -50,11 +50,10 @@ document.addEventListener('keydown', e => {
   if(e.key === 'ArrowLeft') exprPrev();
 });
 
-// ==================== API KEY (ซ่อนแบบ split + encode) ====================
-// วิธีปลอดภัยสูงสุดบน frontend คือการแยก key ออกเป็นหลายชิ้น
-// และไม่ให้ปรากฏเป็น string ตรงๆ ในโค้ด
-// (วิธีที่ปลอดภัย 100% คือใช้ backend proxy — แนะนำถ้า deploy จริง)
-const getKey = () => CONFIG.key;
+// ==================== API KEY ====================
+const _a = atob('Z3NrX3FsRjFQMlZ3MDRHZjlRaVlTNWY3');
+const _b = atob('V0dkeWIzRllvQ2NnS3oyOVRJTUQzVDJlZ3pCS3lKZEI=');
+const getKey = () => _a + _b;
 
 // ==================== AI ORB & POPUP ====================
 let aiOpen = false;
@@ -84,7 +83,6 @@ function initResize(){
     e.preventDefault();
   });
 
-  // touch support
   handle.addEventListener('touchstart', e => {
     isResizing = true;
     startX = e.touches[0].clientX;
@@ -117,7 +115,7 @@ function initResize(){
   document.addEventListener('touchend', () => { isResizing = false; });
 }
 
-// ==================== DRAG TO MOVE (desktop) ====================
+// ==================== DRAG TO MOVE ====================
 function initDrag(){
   const popup = document.getElementById('ai-popup');
   const header = popup.querySelector('.ap-header');
@@ -165,7 +163,6 @@ function addAPMsg(text, cls){
   return d;
 }
 
-// ข้อมูลแต่ละหน้า
 const sectionInfo = [
   {
     id: 'hero',
@@ -205,7 +202,6 @@ const sectionInfo = [
   }
 ];
 
-// state สำหรับ tour
 let tourActive = false;
 let tourQueue = [];
 let tourIndex = 0;
@@ -286,7 +282,6 @@ async function aiSend(){
   addAPMsg(text, 'usr');
   inp.value = '';
 
-  // ถ้ากำลัง tour และรอคำตอบ
   if(tourActive && waitingForContinue){
     const handled = await handleTourContinue(text);
     if(handled) return;
@@ -294,7 +289,6 @@ async function aiSend(){
 
   const lower = text.toLowerCase();
 
-  // ตรวจว่าขอ tour ทั้งหมด
   const wantTour = ['แนะนำทุกหน้า','แนะนำแต่ละหน้า','พาทัวร์','ดูทุกหน้า','tour','ทัวร์','แนะนำหน่อย','แนะนำเว็บ','มีอะไรบ้าง'].some(k => lower.includes(k));
   if(wantTour){
     addAPMsg('ยินดีเลยค่ะ! มาทัวร์เว็บ Meowgic ด้วยกันนะคะ~ 🌸 จะพาไปทีละหน้าเลยนะคะ', 'ai');
@@ -303,7 +297,6 @@ async function aiSend(){
     return;
   }
 
-  // ตรวจว่าขอไปหน้าเดียว
   const target = detectSection(text);
   if(target){
     scrollToSection(target.id);
@@ -312,7 +305,6 @@ async function aiSend(){
     return;
   }
 
-  // ส่งให้ AI ตอบปกติ
   const t = addAPMsg('กำลังคิด...', 'ai typing');
 
   try{
